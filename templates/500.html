@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - CropTracker{% endblock %}
+
+{% block content %}
+<div class="empty-state" style="padding: 5rem 1.5rem;">
+    <h2 style="font-size: 3rem; margin-bottom: 1rem;">500</h2>
+    <h3 style="font-size: 1.75rem; margin-bottom: 1rem;">Server Error</h3>
+    <p>Something went wrong on our end. Please try again later.</p>
+    <a href="{{ url_for('index') }}" class="btn">Go Back Home</a>
+</div>
+{% endblock %}
