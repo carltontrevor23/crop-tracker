@@ -1,46 +1,32 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Add Crop - CropTracker{% endblock %}
 
 {% block content %}
-<h1 class="page-title">🌾 Add New Crop</h1>
-
-<form method="POST" action="{{ url_for('add_crop') }}">
+<h1 class="page-title">Add Crop</h1>
+<div class="form-wrapper">
+  <form method="POST" action="{{ url_for('add_crop') }}">
     <div class="form-group">
-        <label for="name">Crop Name</label>
-        <input 
-            type="text" 
-            id="name" 
-            name="name" 
-            placeholder="e.g., Maize, Beans, Tomato"
-            required
-        >
+      <label for="name">Crop Name</label>
+      <input type="text" id="name" name="name" placeholder="Maize, Beans, Tomatoes" required />
     </div>
-
     <div class="form-group">
-        <label for="planting_date">Planting Date</label>
-        <input 
-            type="date" 
-            id="planting_date" 
-            name="planting_date"
-            required
-        >
+      <label for="planting_date">Planting Date</label>
+      <input type="date" id="planting_date" name="planting_date" required />
     </div>
-
     <div class="form-group">
-        <label for="status">Initial Status</label>
-        <select id="status" name="status" required>
-            {% for choice in status_choices %}
-                <option value="{{ choice }}" {% if choice == 'Planted' %}selected{% endif %}>
-                    {{ choice }}
-                </option>
-            {% endfor %}
-        </select>
+      <label for="status">Status</label>
+      <select id="status" name="status" required>
+        {% for choice in status_choices %}
+          <option value="{{ choice }}" {% if choice == 'Planted' %}selected{% endif %}>{{ choice }}</option>
+        {% endfor %}
+      </select>
     </div>
 
-    <div class="form-buttons">
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
-        <input type="submit" value="Add Crop">
+    <div class="form-actions">
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn">Add Crop</button>
     </div>
-</form>
+  </form>
+</div>
 {% endblock %}

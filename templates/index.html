@@ -1,53 +1,51 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Home - CropTracker{% endblock %}
 
 {% block content %}
-<h1 class="page-title">🌱 My Crops</h1>
+<div class="toolbar">
+  <h1 class="page-title">Crop Inventory</h1>
+  <a href="{{ url_for('add_crop') }}" class="btn">+ Add Crop</a>
+</div>
 
 {% if crops %}
-    <div class="crops-grid">
-        {% for crop in crops %}
-            <div class="crop-card">
-                <h3>{{ crop.name }}</h3>
-                <div class="crop-info">
-                    <label>Planting Date:</label>
-                    <span>{{ crop.planting_date.strftime('%B %d, %Y') }}</span>
-                </div>
-                <div class="crop-info">
-                    <label>Status:</label>
-                    <br>
-                    <span class="status-badge status-{{ crop.status.lower() }}">
-                        {{ crop.status }}
-                    </span>
-                </div>
-                <div class="crop-info">
-                    <label>Days Since Planting:</label>
-                    <span>{{ (now.date() - crop.planting_date).days }} days</span>
-                </div>
-                <div class="crop-actions">
-                    <a href="{{ url_for('edit_crop', crop_id=crop.id) }}" class="btn btn-secondary">Edit</a>
-                    <form method="POST" action="{{ url_for('delete_crop', crop_id=crop.id) }}" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this crop?');">
-                        <button type="submit" class="btn-danger" style="width: 100%; padding: 0.5rem;">Delete</button>
-                    </form>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Planting Date</th>
+        <th>Status</th>
+        <th>Days Since</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for crop in crops %}
+      <tr>
+        <td>{{ crop.name }}</td>
+        <td>{{ crop.planting_date.strftime('%Y-%m-%d') }}</td>
+        <td>
+          <span class="badge badge-{{ crop.status.lower() }}">{{ crop.status }}</span>
+        </td>
+        <td>{{ (now.date() - crop.planting_date).days }} days</td>
+        <td>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <a href="{{ url_for('edit_crop', crop_id=crop.id) }}" class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.82rem;">Edit</a>
+            <form method="POST" action="{{ url_for('delete_crop', crop_id=crop.id) }}" style="display:inline; margin:0;" onsubmit="return confirm('Are you sure you want to delete this crop?');">
+              <button type="submit" class="btn-danger" style="padding: 6px 10px; font-size: 0.82rem;">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% else %}
-    <div class="empty-state">
-        <h2>No crops yet!</h2>
-        <p>Start by adding your first crop to track plant growth and harvest dates.</p>
-        <a href="{{ url_for('add_crop') }}" class="btn">+ Add Your First Crop</a>
-    </div>
+<div class="card" style="text-align: center;">
+  <p style="margin: 16px 0; color: var(--muted);">No crops added yet. Start by adding your first crop.</p>
+  <a href="{{ url_for('add_crop') }}" class="btn">Add Crop</a>
+</div>
 {% endif %}
-{% endblock %}
-
-{% block extra_css %}
-<script>
-    // Make 'now' available for template
-    document.addEventListener('DOMContentLoaded', function() {
-        // This will be managed by the Flask context
-    });
-</script>
 {% endblock %}

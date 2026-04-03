@@ -1,418 +1,240 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CropTracker{% endblock %}</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}CropTracker{% endblock %}</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg: #f5f6f8;
+      --surface: #ffffff;
+      --border: #dde1e7;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2f855a;
+      --accent-soft: #daf5e8;
+      --danger: #c53030;
+      --radius: 10px;
+      --shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+      --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.06);
+      --font: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
 
-        :root {
-            --primary-color: #10b981;
-            --primary-dark: #059669;
-            --primary-light: #d1fae5;
-            --secondary-color: #f59e0b;
-            --danger-color: #ef4444;
-            --text-color: #1f2937;
-            --border-color: #e5e7eb;
-            --bg-light: #f9fafb;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: var(--font);
+      color: var(--text);
+      background-color: var(--bg);
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-                sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-        header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 1.5rem 0;
-            box-shadow: var(--shadow-lg);
-        }
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+    }
 
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    nav {
+      max-width: 1024px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        .logo {
-            font-size: 1.75rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 1rem;
-        }
+    .nav-link {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 8px 12px;
+      transition: all 0.15s ease;
+    }
 
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+    .nav-link:hover {
+      background: #ebf7f0;
+      border-color: #c7e4d6;
+    }
 
-        header a {
-            color: white;
-        }
+    .container {
+      width: min(1024px, 100%);
+      margin: 2rem auto;
+      padding: 0 16px;
+      flex: 1;
+    }
 
-        header a:hover {
-            color: var(--primary-light);
-        }
+    .page-title {
+      margin: 0 0 12px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #111827;
+    }
 
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: var(--shadow);
-        }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
-        button:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-1px);
-        }
+    .btn {
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter 0.15s ease;
+    }
 
-        button:active {
-            transform: translateY(0);
-        }
+    .btn:hover { filter: brightness(0.92); }
+    .btn-secondary { background: #ffffff; color: var(--text); border-color: var(--border); }
+    .btn-secondary:hover { background: #f4f5f7; }
+    .btn-danger { background: #f8d7da; color: #8c1d22; border-color: #f5c2c7; }
+    .btn-danger:hover { background: #f1b8bf; }
 
-        a.btn, input[type="submit"] {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.75rem 1.25rem;
-            border-radius: 0.375rem;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: var(--shadow);
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 18px;
+    }
 
-        a.btn:hover, input[type="submit"]:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
+    .alert {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ecfdf3;
+      border: 1px solid #d1f7e2;
+      color: #065f46;
+      border-radius: 8px;
+      padding: 9px 11px;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+    }
 
-        a.btn-secondary {
-            background-color: var(--secondary-color);
-        }
+    .alert.error {
+      background: #ffe8e8;
+      border-color: #f2c7c8;
+      color: #842029;
+    }
 
-        a.btn-secondary:hover {
-            background-color: #d97706;
-        }
+    .alert button { border: 0; background: transparent; font-size: 1.1rem; cursor: pointer; color: #6b7280; }
 
-        a.btn-danger {
-            background-color: var(--danger-color);
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
 
-        a.btn-danger:hover {
-            background-color: #dc2626;
-        }
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 0.93rem;
+      color: #374151;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            flex: 1;
-        }
+    th { font-weight: 600; background: #f8fafc; color: #4b5563; text-transform: uppercase; letter-spacing: 0.02em; }
+    tr:last-child td { border-bottom: none; }
 
-        .page-title {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-        }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
 
-        .alert {
-            padding: 1rem;
-            border-radius: 0.375rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: slideIn 0.3s ease;
-        }
+    .badge-planted { color:#255e3f; background:#e6f6ec; }
+    .badge-growing { color:#6b4226; background:#fdf2e9; }
+    .badge-harvested { color:#1f4e3e; background:#d9f2e2; }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-1rem);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .form-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
 
-        .alert-success {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-            border: 1px solid var(--primary-color);
-        }
+    .form-group { margin-bottom: 14px; }
 
-        .alert-error {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border: 1px solid var(--danger-color);
-        }
+    label { display: block; margin-bottom: 6px; font-weight: 600; color: #38404e; font-size: 0.9rem; }
+    input, select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.93rem; background: #ffffff; color: #1f2937; }
+    input:focus, select:focus { outline: 2px solid rgba(47,133,90,0.25); border-color: #8ecf9e; }
 
-        .alert-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: inherit;
-            padding: 0;
-        }
+    .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
 
-        form {
-            background: white;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow-lg);
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    footer { margin-top: auto; padding: 16px; text-align: center; color: var(--muted); font-size: 0.9rem; }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        input[type="text"],
-        input[type="date"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.375rem;
-            font-size: 1rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            font-family: inherit;
-        }
-
-        input[type="text"]:focus,
-        input[type="date"]:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        .form-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        .crops-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .crop-card {
-            background: white;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            box-shadow: var(--shadow-lg);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .crop-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .crop-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-
-        .crop-info {
-            margin-bottom: 1rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .crop-info label {
-            font-weight: 600;
-            color: var(--primary-color);
-            display: inline;
-            margin-right: 0.25rem;
-        }
-
-        .crop-info span {
-            color: var(--text-color);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
-        }
-
-        .status-planted {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-
-        .status-growing {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-harvested {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        .crop-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .crop-actions a,
-        .crop-actions button {
-            flex: 1;
-            padding: 0.5rem;
-            text-align: center;
-            font-size: 0.875rem;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1.5rem;
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .empty-state h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-
-        .empty-state p {
-            color: #6b7280;
-            margin-bottom: 1.5rem;
-        }
-
-        footer {
-            background-color: var(--bg-light);
-            border-top: 1px solid var(--border-color);
-            padding: 2rem 1.5rem;
-            text-align: center;
-            color: #6b7280;
-            margin-top: auto;
-        }
-
-        .delete-form {
-            display: inline;
-        }
-
-        .delete-form button {
-            background-color: var(--danger-color);
-            padding: 0.5rem 1rem;
-        }
-
-        .delete-form button:hover {
-            background-color: #dc2626;
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .page-title {
-                font-size: 1.75rem;
-            }
-
-            .crops-grid {
-                grid-template-columns: 1fr;
-            }
-
-            form {
-                padding: 1.5rem;
-            }
-        }
-    </style>
-    {% block extra_css %}{% endblock %}
+    @media (max-width: 768px) {
+      .container { margin: 1.2rem auto; }
+      table, th, td { font-size: 0.86rem; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .form-actions { justify-content: stretch; }
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                🌾 CropTracker
-            </div>
-            <div class="nav-links">
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('add_crop') }}" class="btn">+ Add Crop</a>
-            </div>
-        </nav>
-    </header>
+  <header>
+    <nav>
+      <span class="brand">CropTracker</span>
+      <a href="{{ url_for('add_crop') }}" class="nav-link">Add Crop</a>
+    </nav>
+  </header>
 
-    <div class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}" role="alert">
-                        <span>{{ message }}</span>
-                        <button class="alert-close" onclick="this.parentElement.style.display='none';">×</button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {% if category == 'error' %}error{% endif %}">
+            <span>{{ message }}</span>
+            <button type="button" onclick="this.parentElement.style.display='none'">×</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
 
-        {% block content %}{% endblock %}
-    </div>
-
-    <footer>
-        <p>&copy; 2026 CropTracker. Manage your crops with ease.</p>
-    </footer>
+  <footer>
+    &copy; 2026 CropTracker  Simple crop management for everyday farming.
+  </footer>
 </body>
 </html>
